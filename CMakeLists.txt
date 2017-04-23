@@ -6,7 +6,9 @@ ExternalProject_Add(
 	URL ${CMAKE_SOURCE_DIR}/squirrel
 #	GIT_REPOSITORY https://github.com/albertodemichelis/squirrel.git
 	#GIT_TAG v3.1
-	CMAKE_ARGS -DINSTALL_INC_DIR=include/squirrel
+        CMAKE_ARGS
+            -DINSTALL_INC_DIR=include/squirrel
+            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
 )
 
 ExternalProject_Get_Property(SquirrelLang install_dir)

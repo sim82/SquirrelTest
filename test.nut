@@ -1,4 +1,4 @@
-local a = 1;
+local a = [1,2];
 local b = "2";
 local c = a[1];
 

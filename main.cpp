@@ -58,9 +58,10 @@ int main(int argc, char *argv[])
 
 	//do some stuff with squirrel here
 
-	std::string inputFile = "C:\\src_3dyne\\SquirrelTest\\test.nut";
-	//std::string inputFile = "/home/sim/src/SquirrelTest/test.nut";
+//	std::string inputFile = "C:\\src_3dyne\\SquirrelTest\\test.nut";
+    std::string inputFile = "/home/sim/src_3dyne/SquirrelTest/test.nut";
     compile_file(v, inputFile.c_str());
+
     sq_close(v);
     return 0;
 }
