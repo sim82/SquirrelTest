@@ -7,6 +7,7 @@ ExternalProject_Add(
 #	GIT_REPOSITORY https://github.com/albertodemichelis/squirrel.git
 	#GIT_TAG v3.1
         CMAKE_ARGS
+            -DCMAKE_BUILD_TYPE=Debug
             -DINSTALL_INC_DIR=include/squirrel
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
 )

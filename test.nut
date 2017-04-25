@@ -1,3 +1,5 @@
+::print("something");
+
 local a = [1,2];
 local b = "2";
 local c = a[1];
@@ -56,3 +58,5 @@ class Player extends Entity {
 local newplayer = Player("da playar");
 
 newplayer.MoveTo(100,200,300);
+
+return 666;
