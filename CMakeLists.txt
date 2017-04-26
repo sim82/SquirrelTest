@@ -20,7 +20,8 @@ link_directories(${install_dir}/lib)
 #add_subdirectory(squirrel)
 include_directories(${install_dir}/include)
 project(SquirrelTest)
-add_executable(${PROJECT_NAME} main.cpp test.nut)
+add_executable(${PROJECT_NAME} main.cpp CVm.cpp test.nut)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
 target_link_libraries(${PROJECT_NAME} squirrel_static)
 
 

@@ -1,4 +1,9 @@
-::print("something");
+::print("something vargv.len(): " + vargv.len());
+
+foreach (i,val in vargv)
+{
+        ::print("the type of vargv is "+typeof val + " : " + val);
+}
 
 local a = [1,2];
 local b = "2";
@@ -59,4 +64,4 @@ local newplayer = Player("da playar");
 
 newplayer.MoveTo(100,200,300);
 
-return 666;
+return "666" == "666";

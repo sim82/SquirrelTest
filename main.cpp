@@ -1,12 +1,7 @@
-#include <iostream>
-#include <squirrel/squirrel.h>
+#include "CVm.h"
+
 //#include "squirrel.h"
 #include <iostream>
-#include <fstream>
-#include <stdexcept>
-
-#include <cstdio>
-#include <cstdarg>
 
 std::string TypeToString( SQObjectType const& type )
 {
@@ -36,62 +31,17 @@ std::string TypeToString( SQObjectType const& type )
     }
 }
 
-void ErrorHandler(HSQUIRRELVM v,const SQChar * desc,const SQChar * source,
-                        SQInteger line,SQInteger column)
-{
-    std::cerr << "squirrel error\n";
-    std::cerr << desc << "\n";
-    std::cerr << source << ":" << line << ":" << column << "\n";
-
-}
-
-SQInteger file_lexfeedASCII(SQUserPointer file)
-{
-
-    auto &is = *((std::istream*)file);
-
-    auto c = is.get();
-
-    if( is.eof() )
-    {
-        return 0;
-    }
-//    std::cout << (char)c;
-    return c;
-}
-
-bool compile_file(HSQUIRRELVM v,const char *filename)
-{
-    std::ifstream ifs(filename);
-    if( !ifs.good() )
-    {
-        return false;
-    }
-
-    return SQ_SUCCEEDED(sq_compile(v, file_lexfeedASCII,&ifs,filename,1));
-}
-void printFunc(HSQUIRRELVM v, const SQChar *s, ...)
-{
-    va_list args;
-    va_start(args, s);
-    vfprintf(stdout, s, args);
-    va_end(args);
-}
 
 int main(int argc, char *argv[])
 {
-    HSQUIRRELVM v;
-    v = sq_open(1024); //creates a VM with initial stack size 1024
-    sq_setcompilererrorhandler(v, ErrorHandler);
-    sq_setprintfunc(v, printFunc, printFunc);
-
+    sq::CVm vm;
     //do some stuff with squirrel here
 
 //	std::string inputFile = "C:\\src_3dyne\\SquirrelTest\\test.nut";
     std::string inputFile = "/home/sim/src/SquirrelTest/test.nut";
-    auto bRes = compile_file(v, inputFile.c_str());
+    auto bRes = vm.compileFile(inputFile);
 
-    auto type = sq_gettype(v, -1);
+    auto type = sq_gettype(vm, -1);
     std::cout << "type: " << std::hex << type << "\n";
 
     if( !bRes )
@@ -99,16 +49,29 @@ int main(int argc, char *argv[])
         throw std::runtime_error( "compile failed" );
     }
 
-    sq_pushroottable(v);
-//    sq_pushinteger(v, 1);
-    auto res = sq_call(v, 1, SQTrue, SQTrue);
-    std::cout << "success: " << SQ_SUCCEEDED(res) << "\n";
-    type = sq_gettype(v,-1);
+    vm.pushRoottable();
+    auto num = vm.push(666, 123.4, true, "bla");
+//    vm.push(666);
+//    vm.push(123.4);
+//    vm.push(true);
+//    vm.push("bla");
+
+#if 0
+    {
+        int v0;
+        float v1;
+        bool v2;
+        std::string v3;
+        vm.popMulti(v0,v1,v2,v3);
+
+        std::cout << v0 << v1 << v2 << v3 << std::endl;
+    }
+#endif
+    vm.call(num+1);
+    type = sq_gettype(vm,-1);
     std::cout << "type: " << TypeToString(type) << "\n";
-    SQInteger ret;
-    sq_getinteger(v, -1, &ret);
-    std::cout << "ret: " << std::dec << ret << std::endl;
-    sq_pop(v, 1);
-    sq_close(v);
+    std::cout << "ret: " << std::dec << vm.isA<std::string>(-1) << " " << std::dec << vm.isA<bool>(-1) << " " << vm.get<std::string>(-1) << std::endl;
+    std::cout << "ret: " << std::dec << vm.isA<bool>(-1) << " " << vm.get<bool>(-1) << std::endl;
+    vm.pop(1);
     return 0;
 }
